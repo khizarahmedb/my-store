@@ -1,2 +1,7 @@
 .env
 Dependencies
+.idea/
+bin/
+obj/
+*.DotSettings.user
+dependencies/
