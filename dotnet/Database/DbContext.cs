@@ -1,6 +1,8 @@
-using MongoDB.Driver;
-using Microsoft.Extensions.Options;
 using dotnet.Models;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+
+namespace dotnet.Database;
 
 public class DbContext
 {
@@ -11,7 +13,7 @@ public class DbContext
         _database = client.GetDatabase(options.Value.DatabaseName);
         Console.WriteLine("Successfully connected to MongoDB!");
     }
-    public IMongoCollection<ProductViewModel> Products => _database.GetCollection<ProductViewModel>("Products");
+    public IMongoCollection<ProductModel> Products => _database.GetCollection<ProductModel>("Products");
 }
 
 public class DatabaseSettings

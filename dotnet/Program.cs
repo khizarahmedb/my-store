@@ -1,3 +1,4 @@
+using dotnet.Database;
 using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,7 @@ builder.Services.Configure<DatabaseSettings>(config =>
     config.ConnectionString = System.Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING")!;
     config.DatabaseName = System.Environment.GetEnvironmentVariable("DATABASE_NAME")!;
 });
-builder.Services.AddSingleton<DbContext>();
+builder.Services.AddScoped<DbContext>();
 
 var app = builder.Build();
 
@@ -34,23 +35,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
-    try
-    {
-        var collection = dbContext.Products;
-        if (collection == null)
-        {
-            throw new Exception("Failed to get the Products collection.");
-        }
-
-        var count = await collection.EstimatedDocumentCountAsync();
-        Console.WriteLine($"Estimated document count in Products collection: {count}");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"An error occurred while initializing the database: {ex.Message}");
-    }
-}
 app.Run();
